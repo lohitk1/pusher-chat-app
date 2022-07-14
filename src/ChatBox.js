@@ -1,7 +1,7 @@
 import React from "react";
 import './ChatBox.css';
 
-export default ({ text, username, handleTextChange }) => (
+export default ({ text, username, handleTextChange, isTyping }) => (
   <div>
     <div className="row">
     <div className="col-xs-12">
@@ -10,11 +10,12 @@ export default ({ text, username, handleTextChange }) => (
           <input
             type="text"
             value={text}
-            placeholder="chat here..."
+            placeholder="enter your message"
             className="form-control"
             onChange={handleTextChange}
-            onKeyDown={handleTextChange}
+            onKeyDown={isTyping}
           />
+
         </div>
 
         <div className="clearfix"></div>

@@ -12,7 +12,8 @@ class App extends Component {
     this.state = {
       text: '',
       username: '',
-      chats: []
+      chats: [],
+      is_typing: false
     };
   }
 
@@ -36,18 +37,36 @@ class App extends Component {
     });
 
     this.handleTextChange = this.handleTextChange.bind(this);
+    this.isTyping = this.isTyping.bind(this);
   }
 
   handleTextChange(e) {
+    // If the user presses the enter key then it posts the message to the channel
     if (e.keyCode === 13) {
       const payload = {
         username: this.state.username,
         message: this.state.text
       };
       axios.post('http://localhost:5000/message', payload);
-    } else {
+      this.setState({ is_typing: false });
+    }
+    
+    else {
+      if (this.state.is_typing === true) {
+        const payload = {
+          username: this.state.username,
+          message: "User is typing"
+        };
+        axios.post('http://localhost:5000/message', payload);
+      }
+      this.setState({ is_typing: false });
       this.setState({ text: e.target.value });
     }
+  }
+
+  isTyping() {
+    this.setState({ is_typing: true });
+    this.handleTextChange(1)
   }
 
   render() {
@@ -55,7 +74,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React-Pusher Chat</h1>
+          <h1 className="App-title">Basic React Pusher Chat App</h1>
         </header>
         <section>
           <ChatList chats={this.state.chats} />
